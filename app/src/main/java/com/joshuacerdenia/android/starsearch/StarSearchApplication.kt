@@ -2,14 +2,11 @@ package com.joshuacerdenia.android.starsearch
 
 import android.app.Application
 import androidx.room.Room
-import com.joshuacerdenia.android.starsearch.data.TrackPreferences
 import com.joshuacerdenia.android.starsearch.data.TrackRepository
 import com.joshuacerdenia.android.starsearch.data.api.ITunesApi
 import com.joshuacerdenia.android.starsearch.data.database.TrackDatabase
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.DateFormat
-import java.util.*
 
 class StarSearchApplication : Application() {
 
