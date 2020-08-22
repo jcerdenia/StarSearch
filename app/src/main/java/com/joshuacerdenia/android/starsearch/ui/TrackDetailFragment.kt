@@ -2,6 +2,7 @@ package com.joshuacerdenia.android.starsearch.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -142,14 +143,14 @@ class TrackDetailFragment: Fragment() {
             .load(track.artwork)
             .fit()
             .centerCrop()
-            .placeholder(R.drawable.ic_launcher_foreground)
+            .placeholder(R.drawable.stars)
             .into(imageView)
 
         Picasso.get()
             .load(track.artwork)
             .fit()
             .centerCrop()
-            .placeholder(R.drawable.ic_launcher_foreground)
+            .placeholder(ColorDrawable())
             .into(bgImageView)
     }
 

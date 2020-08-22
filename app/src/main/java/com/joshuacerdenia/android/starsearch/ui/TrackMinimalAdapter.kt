@@ -59,7 +59,7 @@ class TrackMinimalAdapter(
                 .load(track.artwork)
                 .fit()
                 .centerCrop()
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.stars)
                 .into(imageView)
         }
 

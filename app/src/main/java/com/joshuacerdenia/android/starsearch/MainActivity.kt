@@ -48,9 +48,8 @@ class MainActivity : AppCompatActivity(),
 
     override fun onStop() {
         super.onStop()
-        val date = DateFormat.getDateTimeInstance(
-            DateFormat.MEDIUM,
-            DateFormat.SHORT
+        val date = DateFormat.getDateInstance(
+            DateFormat.MEDIUM
         ).format(Date())
         TrackPreferences.saveDate(this, date)
     }
