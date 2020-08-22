@@ -22,5 +22,7 @@ data class Track(
     @SerializedName("primaryGenreName")
     val genre: String? = null,
     @SerializedName("longDescription", alternate = ["shortDescription"])
-    val description: String? = null
+    val description: String? = null,
+    @SerializedName("trackViewUrl", alternate = ["collectionViewUrl"])
+    val url: String? = null
 )

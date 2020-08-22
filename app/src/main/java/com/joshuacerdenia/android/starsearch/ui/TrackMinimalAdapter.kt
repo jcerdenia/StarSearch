@@ -10,36 +10,36 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.joshuacerdenia.android.starsearch.R
-import com.joshuacerdenia.android.starsearch.data.model.Track
+import com.joshuacerdenia.android.starsearch.data.model.TrackMinimal
 import com.squareup.picasso.Picasso
 
-class TrackListAdapter(
+class TrackMinimalAdapter(
     private val listener: SelectListener,
     private val resources: Resources
-) : ListAdapter<Track, TrackListAdapter.TrackHolder>(DiffCallback()) {
+) : ListAdapter<TrackMinimal, TrackMinimalAdapter.TrackMinimalHolder>(DiffCallback()) {
 
     interface SelectListener {
-        fun onTrackSelected(track: Track)
+        fun onTrackSelected(track: TrackMinimal)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackMinimalHolder {
         val view = LayoutInflater.from(parent.context).inflate(
             R.layout.list_item_track,
             parent,
             false
         )
-        return TrackHolder(view)
+        return TrackMinimalHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TrackHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackMinimalHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    inner class TrackHolder(
+    inner class TrackMinimalHolder(
         view: View
     ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private lateinit var track: Track
+        private lateinit var track: TrackMinimal
         private val titleTextView = itemView.findViewById<TextView>(R.id.textView_title)
         private val genreTextView = itemView.findViewById<TextView>(R.id.textView_genre)
         private val priceTextView = itemView.findViewById<TextView>(R.id.textView_price)
@@ -49,9 +49,8 @@ class TrackListAdapter(
             itemView.setOnClickListener(this)
         }
 
-        fun bind(track: Track) {
+        fun bind(track: TrackMinimal) {
             this.track = track
-
             titleTextView.text = track.name ?: track.album
             genreTextView.text = track.genre
             priceTextView.text = resources.getString(R.string.price, "%.2f".format(track.price))
@@ -69,13 +68,13 @@ class TrackListAdapter(
         }
     }
 
-    private class DiffCallback : DiffUtil.ItemCallback<Track>() {
+    private class DiffCallback : DiffUtil.ItemCallback<TrackMinimal>() {
 
-        override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
+        override fun areItemsTheSame(oldItem: TrackMinimal, newItem: TrackMinimal): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
+        override fun areContentsTheSame(oldItem: TrackMinimal, newItem: TrackMinimal): Boolean {
             return oldItem == newItem
         }
     }
