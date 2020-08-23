@@ -17,4 +17,4 @@ Long-term persistence is achieved through SharedPreferences:
 
 In addition to the above, I have implemented a caching system using a local database. Each time data is retrieved from the API, it is saved to the database and retrieved when the device is not connected to the internet.
 
-The app assumes that date from the API can change over time. The implementation automatically deletes any old items in the database that are not part of a more recently retrieved list, ensuring that the database is always current. If the device has no internet connection, the UI still receives the most recent version of the data.
+The app assumes that data from the API can change at any time. My implementation automatically deletes any old items in the database that are not part of a more recently retrieved list, ensuring that the database is always current. If the device has no internet connection, the most recent version of the data is still fed to the UI.
