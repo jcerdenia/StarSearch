@@ -20,16 +20,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/background_image_view"
                 android:layout_width="0dp"
                 android:layout_height="112dp"
+                android:cropToPadding="false"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@color/cardview_dark_background" />
+                app:srcCompat="@drawable/stars" />
 
             <View
                 android:layout_width="0dp"
@@ -46,6 +48,8 @@
                 android:layout_height="80dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:adjustViewBounds="false"
+                android:scaleType="centerInside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/stars" />

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -26,6 +27,7 @@ class TrackListFragment: Fragment(),
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var noItemsTextView: TextView
     private lateinit var adapter: TrackMinimalAdapter
     private var callbacks: Callbacks? = null
 
@@ -57,6 +59,7 @@ class TrackListFragment: Fragment(),
         toolbar = view.findViewById(R.id.toolbar)
         recyclerView = view.findViewById(R.id.recycler_view)
         progressBar = view.findViewById(R.id.progress_bar)
+        noItemsTextView = view.findViewById(R.id.no_items_text_view)
 
         (activity as AppCompatActivity?)?.setSupportActionBar(toolbar)
         adapter = TrackMinimalAdapter(this, resources)
@@ -79,6 +82,11 @@ class TrackListFragment: Fragment(),
         viewModel.tracksLiveData.observe(viewLifecycleOwner, Observer { tracks ->
             adapter.submitList(tracks)
             progressBar.visibility = View.GONE
+            noItemsTextView.visibility = if (tracks.isEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         })
     }
 

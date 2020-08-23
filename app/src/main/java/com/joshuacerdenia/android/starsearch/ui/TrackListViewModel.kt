@@ -21,6 +21,7 @@ class TrackListViewModel: ViewModel() {
     val tracksLiveData = MediatorLiveData<List<TrackMinimal>>()
 
     init {
+        // MediatorLiveData allows the ViewModel to manipulate data as need by UI
         tracksLiveData.addSource(sourceTracksLiveData) { source ->
             tracksLiveData.value = sortTracks(source, currentOrder)
         }

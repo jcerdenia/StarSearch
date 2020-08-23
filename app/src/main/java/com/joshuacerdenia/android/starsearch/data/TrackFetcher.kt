@@ -1,6 +1,5 @@
 package com.joshuacerdenia.android.starsearch.data
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.joshuacerdenia.android.starsearch.data.api.ITunesApi
@@ -17,17 +16,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 
 class TrackFetcher private constructor(
-    context: Context,
-    private val trackDao: TrackDao
+    private val trackDao: TrackDao,
+    private val connectionChecker: ConnectionChecker
 ) {
+
+// This class acts as a repository and handles retrieving data from the iTunes API.
+// Reference to DAO and ability to check internet connection are needed for caching.
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val iTunesApi: ITunesApi = retrofit.create(ITunesApi::class.java)
-
-    private val connectionChecker = ConnectionChecker(context)
     private val executor = Executors.newSingleThreadExecutor()
 
     fun getTrackList(): LiveData<List<TrackMinimal>> {
@@ -87,15 +87,15 @@ class TrackFetcher private constructor(
     }
 
     companion object {
-        // Ensure that there is only ever one instance of this class
+        // Ensure that there is only ever one active instance of this class
         private var INSTANCE: TrackFetcher? = null
 
         fun initialize(
-            context: Context,
-            trackDao: TrackDao
+            trackDao: TrackDao,
+            connectionChecker: ConnectionChecker
         ) {
             if (INSTANCE == null) {
-                INSTANCE = TrackFetcher(context, trackDao)
+                INSTANCE = TrackFetcher(trackDao, connectionChecker)
             }
         }
 

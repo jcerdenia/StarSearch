@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onHomePressed() {
+        supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, TrackListFragment.newInstance())
             .commit()

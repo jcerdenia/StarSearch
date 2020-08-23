@@ -3,7 +3,6 @@ package com.joshuacerdenia.android.starsearch.ui
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
@@ -93,8 +92,15 @@ class TrackDetailFragment: Fragment() {
         return when (item.itemId) {
             R.id.menu_item_view_in_browser -> {
                 if (url != null) {
-                    Intent(Intent.ACTION_VIEW, Uri.parse(url)).also { intent ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    val resolvedActivity = requireActivity().packageManager.resolveActivity(
+                        intent,
+                        PackageManager.MATCH_DEFAULT_ONLY
+                    )
+                    if (resolvedActivity != null) {
                         startActivity(intent)
+                    } else {
+                        showErrorMessage()
                     }
                 } else {
                     showErrorMessage()
@@ -122,19 +128,21 @@ class TrackDetailFragment: Fragment() {
             descriptionTextView.visibility = View.GONE
         }
 
-        Picasso.get()
-            .load(track.artwork)
-            .fit()
-            .centerCrop()
-            .placeholder(R.drawable.stars)
-            .into(imageView)
+        if (track.artwork != null) {
+            Picasso.get()
+                .load(track.artwork)
+                .fit()
+                .centerCrop()
+                .placeholder(R.drawable.stars)
+                .into(imageView)
 
-        Picasso.get()
-            .load(track.artwork)
-            .fit()
-            .centerCrop()
-            .placeholder(ColorDrawable())
-            .into(bgImageView)
+            Picasso.get()
+                .load(track.artwork)
+                .fit()
+                .centerCrop()
+                .placeholder(R.drawable.stars)
+                .into(bgImageView)
+        }
     }
 
     private fun showErrorMessage() {
