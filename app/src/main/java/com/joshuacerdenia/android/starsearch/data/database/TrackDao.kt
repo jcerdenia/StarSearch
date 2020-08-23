@@ -12,6 +12,7 @@ interface TrackDao {
     fun getTracksMinimal(): LiveData<List<TrackMinimal>>
 
     @Query("SELECT id, name, album, artwork, genre, price FROM Track")
+    // Needed method for repository to fetch data if web request fails
     fun getTracksMinimalSynchronously(): List<TrackMinimal>
 
     @Query("SELECT * FROM Track WHERE id=(:id)")
