@@ -2,6 +2,8 @@
 This is a sample master-detail application that retrieves and displays the results of search query "star" from the iTunes API. 
 The master page displays a list of iTunes tracks with minimal info. Clicking on an item opens a new page with more information about that specific item.
 
+<img width="250" src="Screenshot-1.jpg">
+
 <b>Persistence</b><br>
 The app uses different methods of data persistence. The model layer consists of a repository which feeds and receives data from the  
 
