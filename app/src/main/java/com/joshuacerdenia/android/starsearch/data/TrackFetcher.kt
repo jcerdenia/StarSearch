@@ -12,34 +12,20 @@ import com.joshuacerdenia.android.starsearch.utils.ConnectionChecker
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 
-private const val TAG = "TrackRepository"
-
-class TrackRepository private constructor(
+class TrackFetcher private constructor(
     context: Context,
-    private val iTunesApi: ITunesApi,
     private val trackDao: TrackDao
 ) {
 
-    companion object {
-        // Ensure that there is only one instance of the repository
-        private var INSTANCE: TrackRepository? = null
-
-        fun initialize(
-            context: Context,
-            iTunesApi: ITunesApi,
-            trackDao: TrackDao
-        ) {
-            if (INSTANCE == null) {
-                INSTANCE = TrackRepository(context, iTunesApi, trackDao)
-            }
-        }
-
-        fun getInstance(): TrackRepository {
-            return INSTANCE ?: throw IllegalStateException("TrackRepository must be initialized")
-        }
-    }
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://itunes.apple.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val iTunesApi: ITunesApi = retrofit.create(ITunesApi::class.java)
 
     private val connectionChecker = ConnectionChecker(context)
     private val executor = Executors.newSingleThreadExecutor()
@@ -57,9 +43,13 @@ class TrackRepository private constructor(
         return trackDao.getTrackById(id)
     }
 
-    private fun fetchTracksRemotely(
-        request: Call<ITunesResponse>
-    ): MutableLiveData<List<TrackMinimal>> {
+    private fun updateCache(tracks: List<Track>) {
+        executor.execute {
+            trackDao.replaceTracks(tracks)
+        }
+    }
+
+    private fun fetchTracksRemotely(request: Call<ITunesResponse>): MutableLiveData<List<TrackMinimal>> {
         val resultsLiveData = MutableLiveData<List<TrackMinimal>>()
 
         request.enqueue(object : Callback<ITunesResponse> {
@@ -74,7 +64,7 @@ class TrackRepository private constructor(
             ) {
                 response.body()?.tracks?.let { tracks: List<Track> ->
                     updateCache(tracks) // Cache full track data
-                    resultsLiveData.value = lightenTracks(tracks) // Get minimal data for UI
+                    resultsLiveData.value = lightenTracks(tracks)
                 }
             }
         })
@@ -82,7 +72,8 @@ class TrackRepository private constructor(
         return resultsLiveData
     }
 
-    private fun lightenTracks(tracks: List<Track>): List<TrackMinimal> {
+    fun lightenTracks(tracks: List<Track>): List<TrackMinimal> {
+        // Get only minimum data needed for UI
         return tracks.map { track ->
             TrackMinimal(
                 id = track.id,
@@ -95,9 +86,21 @@ class TrackRepository private constructor(
         }
     }
 
-    private fun updateCache(tracks: List<Track>) {
-        executor.execute {
-            trackDao.replaceTracks(tracks)
+    companion object {
+        // Ensure that there is only ever one instance of this class
+        private var INSTANCE: TrackFetcher? = null
+
+        fun initialize(
+            context: Context,
+            trackDao: TrackDao
+        ) {
+            if (INSTANCE == null) {
+                INSTANCE = TrackFetcher(context, trackDao)
+            }
+        }
+
+        fun getInstance(): TrackFetcher {
+            return INSTANCE ?: throw IllegalStateException("TrackFetcher must be initialized")
         }
     }
 }

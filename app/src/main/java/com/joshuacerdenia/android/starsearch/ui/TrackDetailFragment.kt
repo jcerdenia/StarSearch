@@ -2,6 +2,7 @@ package com.joshuacerdenia.android.starsearch.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -14,32 +15,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.joshuacerdenia.android.starsearch.PAGE_TRACK_DETAIL
 import com.joshuacerdenia.android.starsearch.R
 import com.joshuacerdenia.android.starsearch.data.TrackPreferences
 import com.joshuacerdenia.android.starsearch.data.model.Track
 import com.squareup.picasso.Picasso
 
-private const val TAG = "TrackDetailFragment"
-
 class TrackDetailFragment: Fragment() {
 
-    companion object {
-        private const val ARG_TRACK_ID = "ARG_TRACK_ID"
-
-        fun newInstance(trackId: String?): TrackDetailFragment {
-            val args = Bundle().apply {
-                putString(ARG_TRACK_ID, trackId)
-            }
-            return TrackDetailFragment().apply {
-                arguments = args
-            }
-        }
-    }
-
-    private val viewModel: TrackDetailViewModel by lazy {
-        ViewModelProvider(this).get(TrackDetailViewModel::class.java)
-    }
+    private lateinit var viewModel: TrackDetailViewModel
     private lateinit var toolbar: Toolbar
     private lateinit var nameTextView: TextView
     private lateinit var imageView: ImageView
@@ -61,10 +44,11 @@ class TrackDetailFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        viewModel =  ViewModelProvider(this).get(TrackDetailViewModel::class.java)
         arguments?.getString(ARG_TRACK_ID)?.let { id ->
             viewModel.getTrackById(id)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -88,16 +72,15 @@ class TrackDetailFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.apply {
-            subtitle = getString(R.string.last_opened, viewModel.dateLastViewed)
-            setNavigationOnClickListener {
-                callbacks?.onHomePressed()
-            }
+        toolbar.setNavigationOnClickListener {
+            callbacks?.onHomePressed()
         }
 
         viewModel.trackLiveData.observe(viewLifecycleOwner, Observer { track ->
-            track?.let { populateViews(it) }
-            track?.url?.let { url = it }
+            if (track != null) {
+                updateUI(track)
+                track.url?.let { url = it }
+            }
         })
     }
 
@@ -108,7 +91,7 @@ class TrackDetailFragment: Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_view_in_browser -> {
+            R.id.menu_item_view_in_browser -> {
                 if (url != null) {
                     Intent(Intent.ACTION_VIEW, Uri.parse(url)).also { intent ->
                         startActivity(intent)
@@ -122,7 +105,7 @@ class TrackDetailFragment: Fragment() {
         }
     }
 
-    private fun populateViews(track: Track) {
+    private fun updateUI(track: Track) {
         nameTextView.text = track.name ?: track.album
         artistTextView.text = track.artist
         infoTextView.text = getString(
@@ -166,9 +149,24 @@ class TrackDetailFragment: Fragment() {
     override fun onStop() {
         super.onStop()
         context?.let { context ->
-            TrackPreferences.savePage(context, PAGE_TRACK_DETAIL)
+            TrackPreferences.savePage(context,
+                PAGE_TRACK_DETAIL
+            )
             viewModel.trackLiveData.value?.let { track ->
                 TrackPreferences.saveTrackId(context, track.id)
+            }
+        }
+    }
+
+    companion object {
+        private const val ARG_TRACK_ID = "ARG_TRACK_ID"
+
+        fun newInstance(trackId: String?): TrackDetailFragment {
+            val args = Bundle().apply {
+                putString(ARG_TRACK_ID, trackId)
+            }
+            return TrackDetailFragment().apply {
+                arguments = args
             }
         }
     }

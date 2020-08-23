@@ -40,10 +40,10 @@ class TrackMinimalAdapter(
     ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         private lateinit var track: TrackMinimal
-        private val titleTextView = itemView.findViewById<TextView>(R.id.textView_title)
-        private val genreTextView = itemView.findViewById<TextView>(R.id.textView_genre)
-        private val priceTextView = itemView.findViewById<TextView>(R.id.textView_price)
-        private val imageView = itemView.findViewById<ImageView>(R.id.imageView)
+        private val titleTextView = itemView.findViewById<TextView>(R.id.title_text_view)
+        private val genreTextView = itemView.findViewById<TextView>(R.id.genre_text_view)
+        private val priceTextView = itemView.findViewById<TextView>(R.id.price_text_view)
+        private val imageView = itemView.findViewById<ImageView>(R.id.image_view)
 
         init {
             itemView.setOnClickListener(this)

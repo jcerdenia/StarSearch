@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.joshuacerdenia.android.starsearch.PAGE_TRACK_LIST
 import com.joshuacerdenia.android.starsearch.R
 import com.joshuacerdenia.android.starsearch.data.TrackPreferences
 import com.joshuacerdenia.android.starsearch.data.model.TrackMinimal
@@ -22,15 +21,7 @@ class TrackListFragment: Fragment(),
     SortTracksFragment.Callbacks
 {
 
-    companion object {
-        fun newInstance(): TrackListFragment {
-            return TrackListFragment()
-        }
-    }
-
-    private val viewModel: TrackListViewModel by lazy {
-        ViewModelProvider(this).get(TrackListViewModel::class.java)
-    }
+    private lateinit var viewModel: TrackListViewModel
     private lateinit var toolbar: Toolbar
     private lateinit var searchView: SearchView
     private lateinit var recyclerView: RecyclerView
@@ -49,6 +40,11 @@ class TrackListFragment: Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(TrackListViewModel::class.java)
+        context?.let { context ->
+            TrackPreferences.savePage(context, PAGE_TRACK_LIST)
+            viewModel.changeOrder(TrackPreferences.getStoredOrder(context))
+        }
         setHasOptionsMenu(true)
     }
 
@@ -72,8 +68,9 @@ class TrackListFragment: Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         progressBar.visibility = View.VISIBLE
+
         toolbar.apply {
-            subtitle = getString(R.string.last_opened, viewModel.dateLastViewed)
+            subtitle = getString(R.string.last_opened, TrackPreferences.getDateLastViewed(context))
             setOnClickListener {
                 recyclerView.smoothScrollToPosition(0)
             }
@@ -101,7 +98,7 @@ class TrackListFragment: Fragment(),
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(queryText: String): Boolean {
                     if (queryText.isNotEmpty()) {
-                        viewModel.searchTracks(queryText)
+                        viewModel.submitQuery(queryText)
                     }
                     clearFocus()
                     return true
@@ -109,7 +106,7 @@ class TrackListFragment: Fragment(),
 
                 override fun onQueryTextChange(queryText: String): Boolean {
                     return if (queryText.isEmpty()) {
-                        viewModel.searchTracks(queryText)
+                        viewModel.submitQuery(queryText)
                         true
                     } else {
                         false
@@ -124,7 +121,7 @@ class TrackListFragment: Fragment(),
             R.id.menu_item_sort -> {
                 SortTracksFragment.newInstance(context, viewModel.currentOrder)?.apply {
                     setTargetFragment(this@TrackListFragment, 0)
-                    show(this@TrackListFragment.parentFragmentManager, "sort")
+                    show(this@TrackListFragment.requireFragmentManager(), "sort")
                 }
                 true
             }
@@ -149,6 +146,13 @@ class TrackListFragment: Fragment(),
         super.onStop()
         context?.let { context ->
             TrackPreferences.savePage(context, PAGE_TRACK_LIST)
+            TrackPreferences.saveOrder(context, viewModel.currentOrder)
+        }
+    }
+
+    companion object {
+        fun newInstance(): TrackListFragment {
+            return TrackListFragment()
         }
     }
 }

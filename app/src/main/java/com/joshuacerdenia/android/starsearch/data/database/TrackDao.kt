@@ -8,9 +8,6 @@ import com.joshuacerdenia.android.starsearch.data.model.TrackMinimal
 @Dao
 interface TrackDao {
 
-    @Query("SELECT * FROM Track")
-    fun getTracks(): LiveData<List<Track>>
-
     @Query("SELECT id, name, album, artwork, genre, price FROM Track")
     fun getTracksMinimal(): LiveData<List<TrackMinimal>>
 
@@ -25,11 +22,11 @@ interface TrackDao {
 
     @Transaction
     // Add the most recent version of tracks list
-    // and delete any old items that are not in the list
+    // and delete any items that are not in the new list
     fun replaceTracks(tracks: List<Track>) {
         addTracks(tracks)
-        tracks.map { track -> track.id }.also { trackIds ->
-            deleteTracksById(trackIds)
+        tracks.map { track -> track.id }.also { ids ->
+            deleteTracksById(ids)
         }
     }
 }

@@ -1,48 +1,39 @@
 package com.joshuacerdenia.android.starsearch.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.joshuacerdenia.android.starsearch.PAGE_TRACK_LIST
-import com.joshuacerdenia.android.starsearch.data.TrackPreferences
-import com.joshuacerdenia.android.starsearch.data.TrackRepository
+import androidx.lifecycle.ViewModel
+import com.joshuacerdenia.android.starsearch.data.TrackFetcher
 import com.joshuacerdenia.android.starsearch.data.model.TrackMinimal
 import java.util.*
 
-class TrackListViewModel(private val app: Application): AndroidViewModel(app) {
+class TrackListViewModel: ViewModel() {
 
-    companion object {
-        private const val ORDER_NAME = 1
-        private const val ORDER_GENRE = 2
-        private const val ORDER_PRICE_ASCENDING = 3
-        private const val ORDER_PRICE_DESCENDING = 4
-    }
+    private val trackFetcher = TrackFetcher.getInstance()
 
-    private val repository = TrackRepository.getInstance()
-    var currentOrder = TrackPreferences.getStoredOrder(app)
+    var currentOrder = 0
         private set
     var currentQuery = ""
         get() = field.toLowerCase(Locale.ROOT)
         private set
-    var dateLastViewed = TrackPreferences.getDateLastViewed(app)
-        private set
 
-    private val sourceTracksLiveData: LiveData<List<TrackMinimal>> = repository.getTrackList()
+    private val sourceTracksLiveData: LiveData<List<TrackMinimal>> = trackFetcher.getTrackList()
     val tracksLiveData = MediatorLiveData<List<TrackMinimal>>()
 
     init {
         tracksLiveData.addSource(sourceTracksLiveData) { source ->
             tracksLiveData.value = sortTracks(source, currentOrder)
         }
-        TrackPreferences.savePage(app, PAGE_TRACK_LIST)
     }
 
-    fun searchTracks(query: String) {
+    fun submitQuery(query: String) {
         currentQuery = query
         sourceTracksLiveData.value?.let { tracks ->
             if (currentQuery.isNotEmpty()) {
-                tracksLiveData.value = filterTracks(tracks, currentQuery)
+                tracksLiveData.value = filterTracks(
+                    sortTracks(tracks, currentOrder),
+                    currentQuery
+                )
             } else {
                 tracksLiveData.value = sortTracks(tracks, currentOrder)
             }
@@ -51,8 +42,7 @@ class TrackListViewModel(private val app: Application): AndroidViewModel(app) {
 
     fun changeOrder(order: Int) {
         currentOrder = order
-        TrackPreferences.saveOrder(app, currentOrder)
-        tracksLiveData.value?.let { tracks ->
+        sourceTracksLiveData.value?.let { tracks ->
             tracksLiveData.value = sortTracks(
                 filterTracks(tracks, currentQuery),
                 order
@@ -93,5 +83,12 @@ class TrackListViewModel(private val app: Application): AndroidViewModel(app) {
             }
         }
         return filteredTracks
+    }
+
+    companion object {
+        private const val ORDER_NAME = 1
+        private const val ORDER_GENRE = 2
+        private const val ORDER_PRICE_ASCENDING = 3
+        private const val ORDER_PRICE_DESCENDING = 4
     }
 }

@@ -1,10 +1,9 @@
-package com.joshuacerdenia.android.starsearch
+package com.joshuacerdenia.android.starsearch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.joshuacerdenia.android.starsearch.R
 import com.joshuacerdenia.android.starsearch.data.TrackPreferences
-import com.joshuacerdenia.android.starsearch.ui.TrackDetailFragment
-import com.joshuacerdenia.android.starsearch.ui.TrackListFragment
 import java.text.DateFormat
 import java.util.*
 
@@ -22,7 +21,8 @@ class MainActivity : AppCompatActivity(),
 
         if (savedInstanceState == null) {
             val fragment = if (lastViewedPage == PAGE_TRACK_DETAIL) {
-                TrackDetailFragment.newInstance(TrackPreferences.getLastViewedTrackId(this))
+                val trackId = TrackPreferences.getLastViewedTrackId(this)
+                TrackDetailFragment.newInstance(trackId)
             } else {
                 TrackListFragment.newInstance()
             }

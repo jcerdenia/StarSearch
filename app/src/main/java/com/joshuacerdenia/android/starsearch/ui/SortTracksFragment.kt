@@ -9,21 +9,6 @@ import com.joshuacerdenia.android.starsearch.R
 
 class SortTracksFragment: DialogFragment() {
 
-    companion object {
-        private const val ARG_ORDER = "ARG_ORDER"
-
-        fun newInstance(context: Context?, currentOrder: Int): SortTracksFragment? {
-            val args = Bundle().apply {
-                putInt(ARG_ORDER, currentOrder)
-            }
-            return if (context != null) {
-                SortTracksFragment().apply {
-                    arguments = args
-                }
-            } else null
-        }
-    }
-
     interface Callbacks {
         fun onOrderSelected(order: Int)
     }
@@ -55,5 +40,20 @@ class SortTracksFragment: DialogFragment() {
 
         dialog.show()
         return dialog
+    }
+
+    companion object {
+        private const val ARG_ORDER = "ARG_ORDER"
+
+        fun newInstance(context: Context?, currentOrder: Int): SortTracksFragment? {
+            val args = Bundle().apply {
+                putInt(ARG_ORDER, currentOrder)
+            }
+            return if (context != null) {
+                SortTracksFragment().apply {
+                    arguments = args
+                }
+            } else null
+        }
     }
 }

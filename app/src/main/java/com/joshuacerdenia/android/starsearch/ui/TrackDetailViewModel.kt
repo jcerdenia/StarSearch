@@ -1,23 +1,19 @@
 package com.joshuacerdenia.android.starsearch.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import com.joshuacerdenia.android.starsearch.data.TrackPreferences
-import com.joshuacerdenia.android.starsearch.data.TrackRepository
+import androidx.lifecycle.ViewModel
+import com.joshuacerdenia.android.starsearch.data.TrackFetcher
 import com.joshuacerdenia.android.starsearch.data.model.Track
 
-class TrackDetailViewModel(private val app: Application): AndroidViewModel(app) {
+class TrackDetailViewModel: ViewModel() {
 
-    private val repository = TrackRepository.getInstance()
-    var dateLastViewed = TrackPreferences.getDateLastViewed(app)
-        private set
+    private val trackFetcher = TrackFetcher.getInstance()
 
     private val trackIdLiveData = MutableLiveData<String>()
     val trackLiveData: LiveData<Track?> = Transformations.switchMap(trackIdLiveData) { id ->
-        repository.getTrackDetailsById(id)
+        trackFetcher.getTrackDetailsById(id)
     }
 
     fun getTrackById(id: String) {

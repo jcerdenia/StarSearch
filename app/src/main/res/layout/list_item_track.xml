@@ -16,37 +16,37 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView_title"
+            android:id="@+id/title_text_view"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="2"
             android:textColor="@android:color/primary_text_light"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/textView_genre"
+            app:layout_constraintBottom_toTopOf="@+id/genre_text_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/image_view"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/textView_genre"
-            android:layout_width="wrap_content"
+            android:id="@+id/genre_text_view"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView_price"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintEnd_toStartOf="@+id/price_text_view"
+            app:layout_constraintStart_toEndOf="@+id/image_view"
             tools:text="Genre" />
 
         <TextView
-            android:id="@+id/textView_price"
+            android:id="@+id/price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
@@ -58,14 +58,14 @@
             tools:text="Price" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/image_view"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_foreground" />
+            app:srcCompat="@drawable/stars" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
