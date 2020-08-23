@@ -23,6 +23,6 @@ This data is fed to the ViewModel layer, which handles all manipulation needed b
 The View layer simply reacts to any changes in the data that it observes in the ViewModel, and updates the UI accordingly.
 
 <b>Extras</b><br>
-I added options to search and reorder tracks to demonstrate keeping business logic strictly in the ViewModel and limiting the data stream that goes into the UI.
+I added options to search and reorder tracks to demonstrate keeping business logic strictly in the ViewModel and limiting the data stream that is exposed to the UI.
 
 Download APK: https://github.com/joshuacerdenia/StarSearch/blob/master/StarSearch.apk
