@@ -128,21 +128,20 @@ class TrackDetailFragment: Fragment() {
             descriptionTextView.visibility = View.GONE
         }
 
-        if (track.artwork != null) {
-            Picasso.get()
-                .load(track.artwork)
-                .fit()
-                .centerCrop()
-                .placeholder(R.drawable.stars)
-                .into(imageView)
+        Picasso.get()
+            .load(track.artwork.toString())
+            .fit()
+            .centerCrop()
+            .placeholder(R.drawable.stars)
+            .into(imageView)
 
-            Picasso.get()
-                .load(track.artwork)
-                .fit()
-                .centerCrop()
-                .placeholder(R.drawable.stars)
-                .into(bgImageView)
-        }
+        Picasso.get()
+            .load(track.artwork.toString())
+            .fit()
+            .centerCrop()
+            .placeholder(R.drawable.stars)
+            .into(bgImageView)
+
     }
 
     private fun showErrorMessage() {

@@ -56,7 +56,7 @@ class TrackMinimalAdapter(
             priceTextView.text = resources.getString(R.string.price, "%.2f".format(track.price))
 
             Picasso.get()
-                .load(track.artwork)
+                .load(track.artwork.toString())
                 .fit()
                 .centerCrop()
                 .placeholder(R.drawable.stars)
