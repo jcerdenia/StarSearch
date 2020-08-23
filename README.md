@@ -8,7 +8,7 @@ The app uses the MVVM architectural pattern.
 <b>Persistence</b><br>
 The app uses different methods of data persistence. Short-term persistence is handled by ViewModels. 
 
-Long-term persistence is achieved through SharedPreferences:
+Long-term persistence is achieved through Shared Preferences:
 <ul>
   <li>The user's choice of how items are sorted (by relevance, title, genre, or price)</li>
   <li>The user's last viewed page — the app always opens with the most recently viewed page before it was last closed. If the app opens with the detail page, the last viewed item is loaded.</li>
