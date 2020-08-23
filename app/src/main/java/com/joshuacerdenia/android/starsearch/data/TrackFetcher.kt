@@ -15,13 +15,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 
+// This class acts as a repository and handles retrieving data from the iTunes API.
+// Reference to DAO and ability to check internet connection are needed for caching.
+
 class TrackFetcher private constructor(
     private val trackDao: TrackDao,
     private val connectionChecker: ConnectionChecker
 ) {
-
-// This class acts as a repository and handles retrieving data from the iTunes API.
-// Reference to DAO and ability to check internet connection are needed for caching.
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com/")
@@ -41,12 +41,6 @@ class TrackFetcher private constructor(
 
     fun getTrackDetailsById(id: String): LiveData<Track?> {
         return trackDao.getTrackById(id)
-    }
-
-    private fun updateCache(tracks: List<Track>) {
-        executor.execute {
-            trackDao.replaceTracks(tracks)
-        }
     }
 
     private fun fetchTracksRemotely(request: Call<ITunesResponse>): MutableLiveData<List<TrackMinimal>> {
@@ -72,7 +66,7 @@ class TrackFetcher private constructor(
         return resultsLiveData
     }
 
-    fun lightenTracks(tracks: List<Track>): List<TrackMinimal> {
+    private fun lightenTracks(tracks: List<Track>): List<TrackMinimal> {
         // Get only minimum data needed for UI
         return tracks.map { track ->
             TrackMinimal(
@@ -83,6 +77,12 @@ class TrackFetcher private constructor(
                 genre = track.genre,
                 price = track.price
             )
+        }
+    }
+
+    private fun updateCache(tracks: List<Track>) {
+        executor.execute {
+            trackDao.replaceTracks(tracks)
         }
     }
 
