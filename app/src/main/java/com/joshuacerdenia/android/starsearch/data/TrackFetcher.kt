@@ -32,6 +32,7 @@ class TrackFetcher private constructor(
 
     fun getTrackList(): LiveData<List<TrackMinimal>> {
         return if (connectionChecker.isOnline()) {
+            // A new request is required for each call
             val request = iTunesApi.fetchTracks()
             fetchTracksRemotely(request)
         } else {
@@ -57,7 +58,7 @@ class TrackFetcher private constructor(
                 response: Response<ITunesResponse>
             ) {
                 response.body()?.tracks?.let { tracks: List<Track> ->
-                    updateCache(tracks) // Cache full track data
+                    updateCache(tracks) // Cache full track data right away
                     resultsLiveData.value = lightenTracks(tracks)
                 }
             }
@@ -66,8 +67,8 @@ class TrackFetcher private constructor(
         return resultsLiveData
     }
 
+    // Return only minimal data needed by UI
     private fun lightenTracks(tracks: List<Track>): List<TrackMinimal> {
-        // Get only minimum data needed for UI
         return tracks.map { track ->
             TrackMinimal(
                 id = track.id,
@@ -80,6 +81,7 @@ class TrackFetcher private constructor(
         }
     }
 
+    // Replace database contents with a new list
     private fun updateCache(tracks: List<Track>) {
         executor.execute {
             trackDao.replaceTracks(tracks)

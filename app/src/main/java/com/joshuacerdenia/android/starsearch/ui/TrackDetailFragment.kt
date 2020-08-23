@@ -93,6 +93,7 @@ class TrackDetailFragment: Fragment() {
             R.id.menu_item_view_in_browser -> {
                 if (url != null) {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    // Ensure an activity is available to handle intent
                     val resolvedActivity = requireActivity().packageManager.resolveActivity(
                         intent,
                         PackageManager.MATCH_DEFAULT_ONLY
@@ -156,9 +157,7 @@ class TrackDetailFragment: Fragment() {
     override fun onStop() {
         super.onStop()
         context?.let { context ->
-            TrackPreferences.savePage(context,
-                PAGE_TRACK_DETAIL
-            )
+            TrackPreferences.savePage(context, PAGE_TRACK_DETAIL)
             viewModel.trackLiveData.value?.let { track ->
                 TrackPreferences.saveTrackId(context, track.id)
             }

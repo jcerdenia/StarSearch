@@ -9,6 +9,7 @@ import com.joshuacerdenia.android.starsearch.data.model.TrackMinimal
 interface TrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    // REPLACE ensures data is always up to date
     fun addTracks(tracks: List<Track>)
 
     @Query("SELECT id, name, album, artwork, genre, price FROM Track")

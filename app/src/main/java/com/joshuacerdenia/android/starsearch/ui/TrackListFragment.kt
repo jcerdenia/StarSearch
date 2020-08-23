@@ -130,6 +130,7 @@ class TrackListFragment: Fragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_sort -> {
+                // Open dialog
                 SortTracksFragment.newInstance(context, viewModel.currentOrder)?.apply {
                     setTargetFragment(this@TrackListFragment, 0)
                     show(this@TrackListFragment.requireFragmentManager(), "sort")

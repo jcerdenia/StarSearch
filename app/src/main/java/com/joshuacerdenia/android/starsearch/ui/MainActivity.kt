@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity(),
         val lastViewedPage = TrackPreferences.getLastViewedPage(this)
 
         if (savedInstanceState == null) {
+            // Load page last viewed by user on previous visit
             val fragment = if (lastViewedPage == PAGE_TRACK_DETAIL) {
                 val trackId = TrackPreferences.getLastViewedTrackId(this)
                 TrackDetailFragment.newInstance(trackId)
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onHomePressed() {
+        // No backstack to prevent going "back" to the detail page
         supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, TrackListFragment.newInstance())
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
+        // Ignore config change
         if (isFinishing) {
             DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date()).also { date ->
                 TrackPreferences.saveDate(this, date)
