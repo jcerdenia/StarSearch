@@ -47,11 +47,12 @@ class MainActivity : AppCompatActivity(),
             .commit()
     }
 
-    override fun onStop() {
-        super.onStop()
-        val date = DateFormat.getDateInstance(
-            DateFormat.MEDIUM
-        ).format(Date())
-        TrackPreferences.saveDate(this, date)
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date()).also { date ->
+                TrackPreferences.saveDate(this, date)
+            }
+        }
     }
 }
