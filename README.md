@@ -11,8 +11,7 @@ The app uses several methods of data persistence. Short-term persistence is hand
 Long-term persistence is achieved through SharedPreferences:
 <ul>
   <li>The user's choice of how items are sorted (by relevance, title, genre, or price)</li>
-  <li>The user's last viewed page — the app always opens with the most recently viewed page before it was last closed.</li>
-  <li>The most recently viewed item — if the app opens with the detail page, the last viewed item is loaded.</li>
+  <li>The user's last viewed page — the app always opens with the most recently viewed page before it was last closed. If the app opens with the detail page, the last viewed item is loaded.</li>
   <li>A date in the list header of when the user last visited.</li>
 </ul>
 
