@@ -55,7 +55,7 @@ class TrackFetcher private constructor(
         request.enqueue(object : Callback<ITunesResponse> {
             override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                 // Return cached data instead
-                resultsLiveData.value = trackDao.getTracksMinimal().value
+                resultsLiveData.value = trackDao.getTracksMinimalSynchronously()
             }
 
             override fun onResponse(

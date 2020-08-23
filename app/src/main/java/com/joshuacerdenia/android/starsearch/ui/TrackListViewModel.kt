@@ -21,9 +21,13 @@ class TrackListViewModel: ViewModel() {
     val tracksLiveData = MediatorLiveData<List<TrackMinimal>>()
 
     init {
-        // MediatorLiveData allows the ViewModel to manipulate data as need by UI
+        // MediatorLiveData allows the ViewModel to manipulate data as needed by UI
         tracksLiveData.addSource(sourceTracksLiveData) { source ->
-            tracksLiveData.value = sortTracks(source, currentOrder)
+            tracksLiveData.value = if (source != null) {
+                sortTracks(source, currentOrder)
+            } else {
+                emptyList()
+            }
         }
     }
 
@@ -58,7 +62,7 @@ class TrackListViewModel: ViewModel() {
             ORDER_PRICE_ASCENDING -> tracks.sortedBy { it.price }
             ORDER_PRICE_DESCENDING -> tracks.sortedByDescending { it.price }
             else -> {
-                // First, get tracks in default order as retrieved from repository
+                // Get tracks in default order as retrieved from repository
                 sourceTracksLiveData.value?.let {
                     filterTracks(it, currentQuery)
                 } ?: tracks
