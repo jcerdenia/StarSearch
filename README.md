@@ -20,7 +20,7 @@ The app assumes that data from the API can change at any time. My implementation
 The app uses the MVVM architectural pattern, which cleanly separates the user interface from the data source and any data manipulation. 
 The model layer consists of a repository (TrackFetcher) which decides whether data should be sourced from the iTunes API or the local database. 
 This data is fed to the ViewModel layer, which handles all manipulation needed by the UI (e.g., sorting and filtering). 
-The View layer only simply reacts to any changes in the data that it observes in the ViewModel, and updates the UI accordingly.
+The View layer simply reacts to any changes in the data that it observes in the ViewModel, and updates the UI accordingly.
 
 <b>Extras</b><br>
 I added options to search and reorder tracks to demonstrate keeping business logic strictly in the ViewModel and limiting the data stream that goes into the UI.
