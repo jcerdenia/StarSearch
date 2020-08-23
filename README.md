@@ -22,4 +22,7 @@ The model layer consists of a repository (TrackFetcher) which decides whether da
 This data is fed to the ViewModel layer, which handles all manipulation needed by the UI (e.g., sorting and filtering). 
 The View layer only simply reacts to any changes in the data that it observes in the ViewModel, and updates the UI accordingly.
 
+<b>Extras</b>
+I added options to search and reorder tracks to demonstrate keeping business logic strictly to ViewModel and limiting the data stream that goes into the UI.
+
 Download APK: https://github.com/joshuacerdenia/StarSearch/blob/master/StarSearch.apk
