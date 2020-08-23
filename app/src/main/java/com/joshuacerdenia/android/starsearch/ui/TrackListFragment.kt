@@ -73,7 +73,10 @@ class TrackListFragment: Fragment(),
         progressBar.visibility = View.VISIBLE
 
         toolbar.apply {
-            subtitle = getString(R.string.last_opened, TrackPreferences.getDateLastViewed(context))
+            subtitle = TrackPreferences.getDateLastViewed(context)?.let { date ->
+                getString(R.string.last_opened, date)
+            }
+
             setOnClickListener {
                 recyclerView.smoothScrollToPosition(0)
             }
